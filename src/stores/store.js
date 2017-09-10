@@ -4,34 +4,41 @@ import thunk from 'redux-thunk'
 import logger from 'redux-logger'
 
 export const initialState = {
-    nomor: 1,
-    huruf: []
+    result: null,
+    input: {
+        baseName: null,
+        o: 'suffix',
+        k: 'nouns'
+    }
 }
 
 
-export const reducerSatu = ( state = initialState.nomor , action ) => {
+export const result = ( state = initialState.result , action ) => {
     switch( action.type )
     {
-        case 'INCREMENT':
-            return state + 1
+        case 'ADD_RESULT':
+            return action.payload
 
-        case 'DECREMENT':
-            return state - 1
+        case 'UPDATE_RESULT':
+            return state.concat( action.payload )
         
         default:
             return state
     }
 }
 
-export const reducerDua = ( state = initialState.huruf, action ) => {
+export const inputForm = ( state = initialState.input, action ) => {
     switch( action.type )
     {
-        case 'TAMBAH':
-            return state.push(1)
-        
-        case 'KURANG':
-            return state.pop()
-        
+        case 'CHANGE_BASENAME':
+            return Object.assign({}, state, { baseName: action.payload })
+
+        case 'CHANGE_O':
+            return Object.assign({}, state, { o: action.payload })
+
+        case 'CHANGE_K':
+            return Object.assign({}, state, { k: action.payload })
+
         default:
             return state
         
@@ -39,8 +46,8 @@ export const reducerDua = ( state = initialState.huruf, action ) => {
 }
 
 export const combine = combineReducers({
-    reducerSatu,
-    reducerDua,
+    result,
+    inputForm,
 })
 
 export const store   = createStore( combine, applyMiddleware(logger) )

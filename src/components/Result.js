@@ -1,41 +1,55 @@
 import React, { Component } from 'react';
 import {
-  AppRegistry,
   StyleSheet,
-  Text,
   View,
-  Button
+  FlatList
 } from 'react-native';
+import { Container, Header ,Content ,Button, Text, Form, Picker, Item, Label, Input, List, ListItem } from 'native-base';
+import { Col, Row, Grid } from 'react-native-easy-grid'
+import Spinner from 'react-native-spinkit'
+
 import { connect } from 'react-redux'
 
 class Result extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native! ganteng banget Result
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.android.js
-        </Text>
-        <Text style={styles.instructions}>
-            { this.props.stateLocal.reducerSatu }
-        </Text>
 
-        <Button
-            title="KURANG SATU"
-            onPress={() => this.props.decrement()}
-        />
 
-        <Button
-            title="GO BACK"
-            onPress={() => this.props.navigation.goBack()}
-        >
+    render() {
 
-        </Button>
-      </View>
-    );
-  }
+        if (this.props.stateLocal.result == null) 
+        {
+            return ( <Spinner isVisible={true} size={100} type="Bounce"  color="red" /> )
+        }
+        else{
+            return (
+                <Container>
+                    <Content>
+                        <Grid>
+                            <Content>
+                            <List
+                                    onEndReachedThreshold={0.5}
+                                    onEndReached={ () => { console.log('wis') } }
+                                >
+                                    {
+                                        this.props. stateLocal.result.map( (a, i) => {
+                                            return (
+                                                <ListItem 
+                                                    key={i}
+                                                >
+                                                    <Text>{a}</Text>
+                                                </ListItem>
+                                            )
+                                        } )
+                                    }
+                                    
+                                </List>
+                            </Content>
+                        </Grid>
+                    </Content>
+                </Container>
+            )
+        }
+        
+    }
 }
 
 const styles = StyleSheet.create({
