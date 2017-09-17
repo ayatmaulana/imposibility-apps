@@ -7,8 +7,8 @@ export const initialState = {
     result: null,
     input: {
         baseName: null,
-        o: 'suffix',
-        k: 'nouns'
+        o: 'Suffix',
+        k: 'Nouns'
     }
 }
 

@@ -4,16 +4,37 @@ import {
   StyleSheet,
   View,
   Alert,
-  NetInfo
+  NetInfo,
+  TextInput,
+  Picker,
+  Image,
+  TouchableHighlight,
 } from 'react-native';
 import  { connect } from 'react-redux'
-import { Icon, Container, Header ,Content ,Button, Text, Form, Picker, Item, Label, Input,  Spinner  } from 'native-base';
-import { Col, Row, Grid } from 'react-native-easy-grid'
+import { Icon, Container, Header ,Content ,Button, Text, Form, Item, Label,  Spinner,  } from 'native-base';
+import ActionSheet, { ActionSheetCustom } from 'react-native-actionsheet'
+// import { Col, Row, Grid } from 'react-native-easy-grid'
 import axios from 'axios'
+
+const CANCEL_INDEX = 0
+const options = [ 'Cancel', 'Adjectives', 'Nouns', 'Verbs' ]
+const options2 = [ 'Cancel', 'Suffix', 'Prefix']
+
+const title = 'Choose One'
+
+
 
 class Main extends Component {
     static navigationOptions = {
         header: null
+    }
+
+    constructor( props ){
+        super(props)
+        this.actionSheet = null
+
+        // this.handlePress = this.handlePress.bind(this)
+        // this.showActionSheet = this.showActionSheet.bind(this)
     }
 
     async fetchDomain()
@@ -40,8 +61,8 @@ class Main extends Component {
             axios.get("http://sobatdev.com:1945/domain", {
                 params: {
                     q: baseName,
-                    k: k,
-                    o: o
+                    k: k.toLowerCase(),
+                    o: o.toLowerCase()
                 }
             }).then( data => {
                 this.props.addResult( data.data.data )
@@ -53,88 +74,167 @@ class Main extends Component {
         }
     }
 
+    showActionSheet() {
+      this.ActionSheet.show()
+    }
+
+    actionSheetO()
+    {
+     return (
+          <View>
+          <TouchableHighlight
+            onPress={() => {
+              this.ActionSheet.show()
+            }}
+            style={{
+              marginTop: 10,
+              padding: 17,
+              backgroundColor: "#F0A7C1",
+              borderRadius: 15
+            }}
+            underlayColor="#F0A7C1"
+          >
+            <Text style={{ color: '#626262' }}>{ this.props.inputForm.k } </Text>
+          </TouchableHighlight>
+          <ActionSheet
+            ref={o => this.ActionSheet = o}
+            title="lalala"
+            options={options}
+            cancelButtonIndex={CANCEL_INDEX}
+            onPress={(v) => {
+                if( v == CANCEL_INDEX )
+                    return false
+
+                this.props.k( options[v] )
+            }}
+          />
+          </View>
+     )
+     
+    }
+
+    actionSheetK()
+    {
+      return (
+        <View>
+             <TouchableHighlight
+                    onPress={() => {
+                      this.ActionSheetCustom.show()
+                    }}
+                    style={{
+                      marginTop: 10,
+                      padding: 17,
+                      backgroundColor: "#F0A7C1",
+                      borderRadius: 15
+                    }}
+                    underlayColor="#F0A7C1"
+                  >
+                    <Text style={{ color: '#626262' }}> { this.props.inputForm.o } </Text>
+                  </TouchableHighlight>
+                  <ActionSheetCustom
+                    
+                    ref={o => this.ActionSheetCustom = o}
+                    title={title}
+                    options={options2}
+                    cancelButtonIndex={CANCEL_INDEX}
+                    onPress={(v) => {
+                        if( v == CANCEL_INDEX )
+                          return false
+
+                        this.props.o( options2[v] )
+                    }}
+                  />
+        </View>
+      )
+    }
+
     _view()
     {
       const { navigate } = this.props.navigation;
       
       return (
-        <Container>
-          <Header
-            style={ styles.header }
-            noShadow={true}
-           />
-          <Content>
-          <Grid>
-              <Col style={{ backgroundColor: 'white', height: 200 }}>
+        <Container style={ styles.container }>
                 <Content>
-  
-                <Form>
-                  <Item floatingLabel error>
-                    <Label>Username</Label>
-                    <Input 
-  
+                <View
+                  style={{
+                    alignItems: 'center'
+                  }}
+                >
+                  <Image 
+                      source={ require("../assets/img/logo.png") }
+                      style={{ 
+                        width: 250, 
+                        height:200, 
+                        alignItems: 'center' 
+                      }}
+                  />  
+                </View>
+                <Form
+                  style={{padding: 20}}
+                >
+                    <TextInput 
                       onChangeText={ (val) => { this.props.baseName( val ) } }
+                      placeholder="Base Name"
+                      placeholderTextColor="#626262"
+                      style={{
+                        marginTop: 10,
+                        padding: 15,
+                        backgroundColor: "#F0A7C1",
+                        borderRadius: 15,
+                        color: "#626262"
+                      }}
+                      underlineColorAndroid="transparent"
                     />
-                  </Item>
-                </Form>
 
-                </Content>
-              </Col>
-              
-            </Grid>
-            <Grid>
-              <Col style={{ backgroundColor: 'white', height: 200 }}>
-                <Grid>
-                  <Col>
-                    <Content>
-                      <Form>
-                          <Picker
+                  {/* <Picker
                             mode="dialog"
                             headerBackButtonText="Baaack!"
                             selectedValue={ this.props.inputForm.k }
                             onValueChange={ (val) => { this.props.k( val ) } }
+                            style={{
+                              marginTop: 5,
+                              padding: 15,
+                              backgroundColor: "#F0A7C1",
+                              borderRadius: 15
+                            }}
                           >
                           <Item label="Adjectives" value="adjectives" />
                           <Item label="Nouns" value="nouns" />
                           <Item label="Verbs" value="verbs" />
-                        </Picker>
-  
-                      </Form>
-                    </Content>
-                  </Col>
-  
-                  <Col>
-                    <Content>
-                      <Form>
-                          <Picker
+                  </Picker> */}
+                  
+                 { this.actionSheetO() }
+                 { this.actionSheetK() }
+
+                 
+
+                  {/* <Picker
                             mode="dialog"
                             headerBackButtonText="Baaack!"
-                            style={ styles.gridOne }
                             selectedValue={ this.props.inputForm.o }
                             onValueChange={ (val) => { this.props.o( val ) } }
+                            style={{
+                              marginTop: 10,
+                              padding: 15,
+                              backgroundColor: "#F0A7C1",
+                              borderRadius: 15
+                            }}
                           >
                           <Item label="Suffix" value="suffix" />
                           <Item label="Prefix" value="prefix" />
-                        </Picker>
-  
-                      </Form>
-                    </Content>
-                  </Col>
-                </Grid>
-                
-              </Col>
-              
-            </Grid>
-          </Content>
-  
-  
-  
-          <Button 
-            style={ styles.generateButton }
-            onPress={ () => { this.generateDomain() } }
-          >
-                  <Text style={ styles.generateButtonText }> Generate </Text>
-          </Button>
+                  </Picker> */}
+
+                  <TouchableHighlight 
+                    style={ styles.generateButton }
+                    onPress={ () => { this.generateDomain() } }
+                    underlayColor="#AA4468"
+                  >
+                          <Text style={ { color: 'white' } }> Generate </Text>
+                  </TouchableHighlight>
+                </Form>
+
+                </Content>
+       
         </Container>
       );
     }
@@ -146,10 +246,8 @@ class Main extends Component {
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#F5FCFF',
+      backgroundColor: '#B53167',
+      flex: 1
     },
     gridOne: {
       backgroundColor: 'red'
@@ -162,12 +260,18 @@ const styles = StyleSheet.create({
       height: 60,
       // flex: 1,
       justifyContent: 'center',
-      alignItems: 'center'
+      alignItems: 'center',
+      backgroundColor: "#822042",
+      borderRadius: 15,
+      marginTop: 20
     },
     header: {
       backgroundColor: '#e74c3c',
       // elevation: 0
-    }
+    },
+
+
+
   });
   
 
