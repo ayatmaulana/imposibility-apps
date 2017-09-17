@@ -10,18 +10,72 @@ import Spinner from 'react-native-spinkit'
 
 import { connect } from 'react-redux'
 
+import LoadScreen from './LoadScreen'
+
 class Result extends Component {
+    static navigationOptions = {
+        header: false,
+        headerStyle: {
+            backgroundColor: "#B53167",
+            height: 60
+        },
+        headerTintColor: 'white',
+        title: 'Result',
+        gesturesEnabled: true
+    }
+    
+    // render() {
 
+    //     if (this.props.stateLocal.result == null) 
+    //     {
+    //         return ( <Spinner isVisible={true} size={100} type="Bounce"  color="red" /> )
+    //     }
+    //     else{
+    //         return (
+    //             <Container>
+    //                 <Content>
+    //                     <Grid>
+    //                         <Content>
+    //                         <List
+    //                                 onEndReachedThreshold={0.5}
+    //                                 onEndReached={ () => { console.log('wis') } }
+    //                             >
+    //                                 {
+    //                                     this.props. stateLocal.result.map( (a, i) => {
+    //                                         return (
+    //                                             <ListItem 
+    //                                                 key={i}
+    //                                             >
+    //                                                 <Text>{a}</Text>
+    //                                             </ListItem>
+    //                                         )
+    //                                     } )
+    //                                 }
+                                    
+    //                             </List>
+    //                         </Content>
+    //                     </Grid>
+    //                 </Content>
+    //             </Container>
+    //         )
+    //     }
+        
+    // }
 
-    render() {
-
-        if (this.props.stateLocal.result == null) 
+    render()
+    {
+        if(this.props.stateLocal.result == null)
         {
-            return ( <Spinner isVisible={true} size={100} type="Bounce"  color="red" /> )
-        }
-        else{
             return (
-                <Container>
+                <LoadScreen />
+            )
+        }  else{
+            return (
+                <Container
+                    style={{
+                        backgroundColor: "#F0A7C1"
+                    }}
+                >
                     <Content>
                         <Grid>
                             <Content>
