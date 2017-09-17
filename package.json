@@ -12,6 +12,7 @@
 		"react": "16.0.0-alpha.12",
 		"react-native": "0.48.2",
 		"react-native-actionsheet": "^2.2.2",
+		"react-native-app-intro": "^1.1.5",
 		"react-native-easy-grid": "^0.1.15",
 		"react-native-spinkit": "^1.1.1",
 		"react-navigation": "^1.0.0-beta.11",

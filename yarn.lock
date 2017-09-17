@@ -179,6 +179,18 @@ assert-plus@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/assert-plus/-/assert-plus-0.2.0.tgz#d74e1b87e7affc0db8aadb7021f3fe48101ab234"
 
+assign-deep@^0.4.5:
+  version "0.4.6"
+  resolved "https://registry.yarnpkg.com/assign-deep/-/assign-deep-0.4.6.tgz#2192a989354843093a03eff941c9473a9bc58a1d"
+  dependencies:
+    assign-symbols "^0.1.1"
+    is-primitive "^2.0.0"
+    kind-of "^5.0.2"
+
+assign-symbols@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/assign-symbols/-/assign-symbols-0.1.1.tgz#cb025944ef4ec8a3693f086e9e112c74e3a0fed9"
+
 astral-regex@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/astral-regex/-/astral-regex-1.0.0.tgz#6c8c3fb827dd43ee3918f27b82782ab7658a6fd9"
@@ -2665,6 +2677,10 @@ kind-of@^4.0.0:
   dependencies:
     is-buffer "^1.1.5"
 
+kind-of@^5.0.2:
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-5.0.2.tgz#f57bec933d9a2209ffa96c5c08343607b7035fda"
+
 klaw@^1.0.0:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/klaw/-/klaw-1.3.1.tgz#4088433b46b3b1ba259d78785d8e96f73ba02439"
@@ -3557,6 +3573,13 @@ react-native-actionsheet@^2.2.2:
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/react-native-actionsheet/-/react-native-actionsheet-2.2.2.tgz#469075a7d1c8e5b5d0829294bf9a2c4d2eb7e34e"
 
+react-native-app-intro@^1.1.5:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/react-native-app-intro/-/react-native-app-intro-1.1.5.tgz#34a2d2265b2d654d31bae743c404856c37448692"
+  dependencies:
+    assign-deep "^0.4.5"
+    react-native-swiper "git+https://github.com/FuYaoDe/react-native-swiper.git"
+
 react-native-dismiss-keyboard@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/react-native-dismiss-keyboard/-/react-native-dismiss-keyboard-1.0.0.tgz#32886242b3f2317e121f3aeb9b0a585e2b879b49"
@@ -3599,6 +3622,12 @@ react-native-spinkit@^1.1.1:
   resolved "https://registry.yarnpkg.com/react-native-spinkit/-/react-native-spinkit-1.1.1.tgz#3ae512f3978bc750b7c02639911e1710750d8539"
   dependencies:
     prop-types "^15.5.8"
+
+"react-native-swiper@git+https://github.com/FuYaoDe/react-native-swiper.git":
+  version "1.4.4"
+  resolved "git+https://github.com/FuYaoDe/react-native-swiper.git#a6417ff41a8b2d490bdcc4541015ab35736d4595"
+  dependencies:
+    react-timer-mixin "^0.13.3"
 
 react-native-tab-view@^0.0.65:
   version "0.0.65"
