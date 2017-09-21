@@ -12,6 +12,8 @@ const AppNavigator = StackNavigator({
     Main : { screen: Main} ,
     Intro : { screen: IntroScreen}, 
     Result: { screen: Result }
+},{
+    initialRouteName: 'Main'
 })
 
 

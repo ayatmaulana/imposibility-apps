@@ -4,7 +4,7 @@ import thunk from 'redux-thunk'
 import logger from 'redux-logger'
 
 export const initialState = {
-    result: null,
+    result: [],
     input: {
         baseName: null,
         o: 'Suffix',
@@ -22,6 +22,9 @@ export const result = ( state = initialState.result , action ) => {
         case 'UPDATE_RESULT':
             return state.concat( action.payload )
         
+        case 'DESTROY_RESULT':
+            return []
+
         default:
             return state
     }

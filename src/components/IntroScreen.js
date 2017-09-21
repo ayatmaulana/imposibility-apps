@@ -64,7 +64,21 @@ export default class IntroScreen extends Component {
     return (
         <AppIntro
             showSkipButton={false}
-            showDoneButton={false}
+            onDoneBtnClick={async () => {
+                
+                try{
+                    store = await AsyncStorage.setItem('installed','1')
+                    
+                    this.props.navigation.navigate('Main')
+                } catch(e)
+                {
+                    console.log(e)
+                }
+                
+
+                
+            }}
+            customStyles={{btnContainer: {flex: 1, alignItems: 'flex-end'}}}
         >
             <View style={[styles.slide, { backgroundColor: '#B53167' }]}>
                 <View style={ styles.iconWrapper }>
@@ -107,18 +121,6 @@ export default class IntroScreen extends Component {
                 <View level={15} style={{ padding: 5 }} >
                     <Text style={styles.desc}>create your domain now, with domain generator</Text>
                 </View>
-                    <Button info onPress={() => {
-                            console.log('pressed')
-                            AsyncStorage.setItem('@ayatmaulana:installed','1')
-                            .then(data => {
-                                this.props.navigation.navigate("Main")
-                            })
-                            .catch(e => {
-                                console.log(e)
-                            })
-                    }}  >
-                        <Text style={{ color: 'white', fontSize: 15 }}> Start </Text>
-                    </Button>
             </View>
             
         </AppIntro>

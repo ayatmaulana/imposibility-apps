@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   View,
-  FlatList
+  FlatList,
+  TouchableHighlight,
+  ListView,
+  RefreshControl
 } from 'react-native';
 import { Container, Header ,Content ,Button, Text, Form, Picker, Item, Label, Input, List, ListItem } from 'native-base';
 import { Col, Row, Grid } from 'react-native-easy-grid'
@@ -11,6 +14,8 @@ import Spinner from 'react-native-spinkit'
 import { connect } from 'react-redux'
 
 import LoadScreen from './LoadScreen'
+
+import { get } from '../services/fetchService'
 
 class Result extends Component {
     static navigationOptions = {
@@ -24,52 +29,42 @@ class Result extends Component {
         gesturesEnabled: true
     }
     
-    // render() {
+    constructor(props)
+    {
+        super(props)
+        var ds =  new ListView.DataSource(
+            { rowHasChanged: (r1,r2) => r1 !== r2 }
+        )
 
-    //     if (this.props.stateLocal.result == null) 
-    //     {
-    //         return ( <Spinner isVisible={true} size={100} type="Bounce"  color="red" /> )
-    //     }
-    //     else{
-    //         return (
-    //             <Container>
-    //                 <Content>
-    //                     <Grid>
-    //                         <Content>
-    //                         <List
-    //                                 onEndReachedThreshold={0.5}
-    //                                 onEndReached={ () => { console.log('wis') } }
-    //                             >
-    //                                 {
-    //                                     this.props. stateLocal.result.map( (a, i) => {
-    //                                         return (
-    //                                             <ListItem 
-    //                                                 key={i}
-    //                                             >
-    //                                                 <Text>{a}</Text>
-    //                                             </ListItem>
-    //                                         )
-    //                                     } )
-    //                                 }
-                                    
-    //                             </List>
-    //                         </Content>
-    //                     </Grid>
-    //                 </Content>
-    //             </Container>
-    //         )
-    //     }
-        
-    // }
+        this.state = {
+            dataSource: ds.cloneWithRows( [ 2,4 ] )
+        }
+    }
+
+    componentDidUpdate()
+    {
+        var ds =  new ListView.DataSource(
+            { rowHasChanged: (r1,r2) => r1 !== r2 }
+        )
+       
+        this.setState({
+            dataSource: ds.cloneWithRows( [ ...this.props.stateLocal.result] )
+        })
+    }
+
+    componentWillUnmount()
+    {
+        this.props.destroyResult()
+    }
 
     render()
     {
-        if(this.props.stateLocal.result == null)
+        if(this.props.stateLocal.result.length == 0)
         {
             return (
                 <LoadScreen />
             )
-        }  else{
+        }  else{ 
             return (
                 <Container
                     style={{
@@ -79,7 +74,7 @@ class Result extends Component {
                     <Content>
                         <Grid>
                             <Content>
-                            <List
+                            {/* <List
                                     onEndReachedThreshold={0.5}
                                     onEndReached={ () => { console.log('wis') } }
                                 >
@@ -95,7 +90,34 @@ class Result extends Component {
                                         } )
                                     }
                                     
-                                </List>
+                                </List> */}
+
+                                <ListView 
+                                    dataSource={ this.state.dataSource }
+                                    renderRow={(rowData, i) => {
+                                        return (
+                                            <ListItem key={i} >
+                                                <Text style={{fontSize: 20}}>{rowData}</Text>
+                                            </ListItem>
+                                        )
+                                    }}
+                                    onEndReached={() => {
+                                        console.log('reached')
+                                        let {baseName, o, k} = this.props.stateLocal.inputForm
+
+                                        get(baseName, o, k).then(v => {
+                                            this.props.updateResult( v.data.data )
+                                        }).catch(e => console.log(e))
+                                    }}
+                                    onEndReachedThreshold={0.5}
+                                    refreshControl={
+                                    <RefreshControl
+                                        refreshing={ false }
+                                        onRefresh={ () => console.log('refreshed') }
+                                    />
+                                    }
+                                />
+
                             </Content>
                         </Grid>
                     </Content>
@@ -113,16 +135,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
 });
 
 const mapStateToProps = (state) => ({
@@ -130,10 +142,9 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    increment : () => dispatch({ type: 'INCREMENT' }),
-    decrement : () => dispatch({ type: 'DECREMENT' }),
-    tambah    : () => dispatch({ type: 'TAMBAH' }),
-    kurang    : () => dispatch({ type: 'KURANG' })
+    destroyResult : () => dispatch({ type: 'DESTROY_RESULT' }),
+    addResult: (val) => dispatch({ type: 'ADD_RESULT', payload: val }),
+    updateResult: (val) => dispatch({ type: 'UPDATE_RESULT', payload: val })
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Result)

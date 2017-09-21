@@ -3,18 +3,22 @@ import {
   AppRegistry,
   StyleSheet,
   View,
-  Alert,
   NetInfo,
   TextInput,
   Picker,
   Image,
   TouchableHighlight,
+  AsyncStorage,
+  ToastAndroid,
+  BackHandler
 } from 'react-native';
 import  { connect } from 'react-redux'
 import { Icon, Container, Header ,Content ,Button, Text, Form, Item, Label,  Spinner,  } from 'native-base';
 import ActionSheet, { ActionSheetCustom } from 'react-native-actionsheet'
 // import { Col, Row, Grid } from 'react-native-easy-grid'
 import axios from 'axios'
+
+import { get } from '../services/fetchService'
 
 const CANCEL_INDEX = 0
 const options = [ 'Cancel', 'Adjectives', 'Nouns', 'Verbs' ]
@@ -29,9 +33,39 @@ class Main extends Component {
         header: null
     }
 
+    async isInstalled(){
+      try{
+        let isInstalled = await AsyncStorage.getItem('installed')
+        
+        return isInstalled
+      } catch(e)
+      {
+        console.log(e)
+      }
+      
+    }
+
+
     constructor( props ){
         super(props)
         this.actionSheet = null
+
+        BackHandler.addEventListener('hardwareBackPress', () => {
+            console.log(111)
+            return true;
+        });
+
+        this.isInstalled().then( v => {
+
+
+          if(v == null)
+            this.props.navigation.navigate('Intro')
+
+
+        })
+        .catch( e => {
+          console.log(e)
+        })
 
         // this.handlePress = this.handlePress.bind(this)
         // this.showActionSheet = this.showActionSheet.bind(this)
@@ -49,27 +83,20 @@ class Main extends Component {
     {
         var { baseName, o, k } = this.props.inputForm
         if( baseName == null )
-            Alert.alert("BaseName Cannot Be Null")
+            ToastAndroid.show('Base Name Cannot be Null', 6000)
         else{
             
             this.fetchDomain().then( r => {
                 console.log(r)
-                if( !r ) { Alert.alert( "Not Connectivy" ) }
+                if( !r ) { ToastAndroid.show( "Not Connectivy", 6000 ) }
             } )
             .catch(err => console.log(err))
 
-            axios.get("http://sobatdev.com:1945/domain", {
-                params: {
-                    q: baseName,
-                    k: k.toLowerCase(),
-                    o: o.toLowerCase()
-                }
-            }).then( data => {
-                this.props.addResult( data.data.data )
-                
-            } )
-            .catch( err => console.log(err))
-
+            get(baseName, o, k).then(d => {
+              this.props.addResult( d.data.data )
+            })
+            .catch(e => console.log(e))
+            
             this.props.navigation.navigate('Result')
         }
     }
@@ -228,10 +255,13 @@ class Main extends Component {
                     style={ styles.generateButton }
                     onPress={ () => { this.generateDomain() } }
                     underlayColor="#AA4468"
+
                   >
                           <Text style={ { color: 'white' } }> Generate </Text>
                   </TouchableHighlight>
                 </Form>
+
+                <Text style={{ marginTop: 20 ,alignSelf: 'center', color: 'white' }}> (c) 2017 - Ayat Maulana </Text>
 
                 </Content>
        
